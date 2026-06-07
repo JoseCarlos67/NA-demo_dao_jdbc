@@ -2,7 +2,6 @@ package model.dao.impl;
 
 import db.DB;
 import db.DbException;
-import model.dao.DepartmentDao;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
@@ -84,7 +83,19 @@ public class SellerDaoJDBC implements SellerDao {
 
   @Override
   public void deleteById(Integer id) {
+    PreparedStatement preparedStatement = null;
 
+    try {
+      preparedStatement = connection.prepareStatement("delete from seller where id = ?");
+
+      preparedStatement.setInt(1, id);
+
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new DbException(e.getMessage());
+    } finally {
+      DB.closeStatement(preparedStatement);
+    }
   }
 
   @Override
